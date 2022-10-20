@@ -1,4 +1,4 @@
-parse_client <- function(client, concise) {
+parse_client <- function(client, concise = TRUE) {
   client <- with(
     client,
     tibble(
@@ -34,16 +34,12 @@ parse_client <- function(client, concise) {
 #' }
 clients <- function(concise = TRUE) {
   path <- sprintf("/workspaces/%s/clients", workspace())
-  clients <- GET(path) %>%
-    content() %>%
-    map_df(parse_client, concise = concise)
 
-  clients
+  paginate(path) %>%
+    map_df(parse_client, concise = concise)
 }
 
 #' Add a new client to workspace
-#'
-#' Wraps \code{POST /workspaces/{workspaceId}/clients}.
 #'
 #' @inheritParams users
 #'
@@ -54,11 +50,9 @@ clients <- function(concise = TRUE) {
 #'
 #' @examples
 #' \dontrun{
-#' set_api_key(Sys.getenv("CLOCKIFY_API_KEY"))
-#'
-#' client_insert("RStudio")
+#' client_create("RStudio")
 #' }
-client_insert <- function(name, concise = TRUE) {
+client_create <- function(name, concise = TRUE) {
   path <- sprintf("/workspaces/%s/clients", workspace())
 
   body <- list("name" = name)
@@ -68,9 +62,34 @@ client_insert <- function(name, concise = TRUE) {
     parse_client(concise = concise)
 }
 
-#' Delete a client from workspace
+#' Update a client
 #'
-#' Wraps \code{DELETE /workspaces/{workspaceId}/clients}.
+#' @param client_id Client ID
+#' @param name Client name
+#' @param note Note about client
+#' @param archived Whether or not client is archived
+#'
+#' @return A data frame with one record for the updated client.
+#' @export
+client_update <- function(client_id,
+                          name = NULL,
+                          note = NULL,
+                          archived = NULL) {
+  path <- sprintf("/workspaces/%s/clients/%s", workspace(), client_id)
+
+  body <- list(
+    name = name,
+    note = note,
+    archived = as.logical(archived)
+  ) %>%
+    list_remove_empty()
+
+  PUT(path, body = body) %>%
+    content() %>%
+    parse_client()
+}
+
+#' Delete a client from workspace
 #'
 #' @param client_id Client ID
 #'
