@@ -1,26 +1,54 @@
 EMPTY_SHARED_REPORTS <- tibble(
   shared_report_id = character(),
+  workspace_id = character(),
+  user_id = character(),
   report_author = character(),
   name = character(),
   link = character(),
   visible_to_users = logical(),
+  visible_to_user_groups = logical(),
   fixed_date = logical(),
   type = character(),
-  visible_to_user_groups = logical(),
+  filter = logical(),
   is_public = logical()
 )
 
 parse_shared_report_list <- function(reports) {
-  tibble(reports) %>%
+  reports <- tibble(reports) %>%
     unnest_wider(reports) %>%
-    clean_names() %>%
-    select(shared_report_id = id, everything())
+    clean_names()
+
+  if (!("report_author" %in% names(reports))) reports$report_author <- NA
+  if (!("link" %in% names(reports))) reports$link <- NA
+  if (!("workspace_id" %in% names(reports))) reports$workspace_id <- NA
+  if (!("user_id" %in% names(reports))) reports$user_id <- NA
+  if (!("filter" %in% names(reports))) reports$filter <- NA
+
+  reports %>% select(
+    shared_report_id = id,
+    workspace_id,
+    user_id,
+    report_author,
+    name,
+    link,
+    visible_to_users,
+    visible_to_user_groups,
+    fixed_date,
+    type,
+    filter,
+    is_public
+  )
 }
 
 parse_shared_report <- function(report) {
   report <- tibble(report) %>%
-    unnest_wider(report) %>%
-    rename(groups = groupOne)
+    unnest_wider(report)
+
+  if ("groupOne" %in% names(report)) {
+    report <- report %>% rename(groups = groupOne)
+  } else {
+    report$groups <- NA
+  }
 
   if (!is.na(report$groups)) {
     report <- report %>%
@@ -64,6 +92,8 @@ parse_shared_report <- function(report) {
   #       }
   #     )
   #   )
+
+  report
 }
 
 #' Shared Reports Parameters
@@ -212,7 +242,9 @@ shared_report_update <- function(shared_report_id, name = NULL, is_public = NULL
     body = body
   )
 
-  status_code(response) == 200
+  content(response) %>%
+    list() %>%
+    parse_shared_report_list()
 }
 
 #' Delete a shared report

@@ -9,15 +9,12 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/clockify)](https://cran.r-project.org/package=clockify)
-[![Travis-CI build
-status](https://travis-ci.org/datawookie/clockify.svg?branch=master)](https://travis-ci.org/datawookie/clockify)
 [![Codecov test
-coverage](https://img.shields.io/codecov/c/github/datawookie/clockify.svg)](https://codecov.io/github/datawookie/clockify)
+coverage](https://img.shields.io/codecov/c/github/datawookie/clockify.svg)](https://app.codecov.io/github/datawookie/clockify)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)<!-- badges: end -->
 
-An R wrapper around the [Clockify
-API](https://clockify.me/developers-api).
+An R wrapper around the [Clockify API](https://docs.clockify.me/).
 
 The documentation for `{clockify}` is hosted at
 <https://datawookie.github.io/clockify/>.
@@ -53,7 +50,7 @@ scenes.
 ``` r
 library(logger)
 
-log_threshold(DEBUG)
+log_threshold(INFO)
 ```
 
 ## Workspaces
@@ -64,12 +61,10 @@ Retrieve a list of available workspaces.
 workspaces()
 ```
 
-    2022-10-19 16:44:47 — GET https://api.clockify.me/api/v1/workspaces
-
     # A tibble: 3 × 3
       workspace_id             name               memberships      
       <chr>                    <chr>              <list>           
-    1 5ef46294df73063139f60bfc Fathom Data        <tibble [17 × 6]>
+    1 5ef46294df73063139f60bfc Fathom Data        <tibble [22 × 6]>
     2 61343c45ab05e02be2c8c1fd Personal           <tibble [2 × 4]> 
     3 630c61ba9c3a3c3112812332 {clockify} sandbox <tibble [5 × 6]> 
 
@@ -78,8 +73,6 @@ Select a specific workspace.
 ``` r
 workspace("630c61ba9c3a3c3112812332")
 ```
-
-    2022-10-19 16:44:47 — Set active workspace -> 630c61ba9c3a3c3112812332.
 
     [1] "630c61ba9c3a3c3112812332"
 
@@ -91,12 +84,10 @@ Retrieve information on your user profile.
 user()
 ```
 
-    2022-10-19 16:44:47 — GET https://api.clockify.me/api/v1/user
-
     # A tibble: 1 × 3
-      user_id                  user_name status
-      <chr>                    <chr>     <chr> 
-    1 5f227e0cd7176a0e6e754409 Andrew    ACTIVE
+      user_id                  user_name      status
+      <chr>                    <chr>          <chr> 
+    1 5f227e0cd7176a0e6e754409 Andrew Collier ACTIVE
 
 Get a list of users.
 
@@ -104,16 +95,14 @@ Get a list of users.
 users()
 ```
 
-    2022-10-19 16:44:47 — GET https://api.clockify.me/api/v1/workspaces/630c61ba9c3a3c3112812332/users
-
     # A tibble: 5 × 3
-      user_id                  user_name   status                    
-      <chr>                    <chr>       <chr>                     
-    1 5f227e0cd7176a0e6e754409 Andrew      ACTIVE                    
-    2 630f17f04a05b20faf7e0afc Bob Smith   ACTIVE                    
-    3 630f16ab90cfd878937a7997 <NA>        NOT_REGISTERED            
-    4 630f1cb9cb18da61cfd58659 Carol Brown PENDING_EMAIL_VERIFICATION
-    5 630f15d3b59c366b0e3ae2e6 Alice Jones ACTIVE                    
+      user_id                  user_name      status                    
+      <chr>                    <chr>          <chr>                     
+    1 5f227e0cd7176a0e6e754409 Andrew Collier ACTIVE                    
+    2 630f17f04a05b20faf7e0afc Bob Smith      ACTIVE                    
+    3 630f16ab90cfd878937a7997 <NA>           NOT_REGISTERED            
+    4 630f1cb9cb18da61cfd58659 Carol Brown    PENDING_EMAIL_VERIFICATION
+    5 630f15d3b59c366b0e3ae2e6 Alice Jones    ACTIVE                    
 
 ## Clients
 
@@ -123,14 +112,10 @@ Get a list of clients.
 clients()
 ```
 
-    2022-10-19 16:44:47 — GET https://api.clockify.me/api/v1/workspaces/630c61ba9c3a3c3112812332/clients
-    2022-10-19 16:44:47 — Page contains 1 results.
-    2022-10-19 16:44:47 — API returned 1 results.
-
     # A tibble: 1 × 3
       client_id                workspace_id             client_name
       <chr>                    <chr>                    <chr>      
-    1 630ce46090cfd8789366f4fb 630c61ba9c3a3c3112812332 RStudio    
+    1 63a55695db26c25e9d4e2d02 630c61ba9c3a3c3112812332 RStudio    
 
 ## Projects
 
@@ -140,17 +125,12 @@ Get a list of projects.
 projects()
 ```
 
-    2022-10-19 16:44:47 — GET https://api.clockify.me/api/v1/workspaces/630c61ba9c3a3c3112812332/projects
-    2022-10-19 16:44:47 — Page contains 3 results.
-    2022-10-19 16:44:47 — API returned 3 results.
-
     # A tibble: 3 × 5
-      project_id               project_name client_id                billa…¹ archi…²
-      <chr>                    <chr>        <chr>                    <lgl>   <lgl>  
-    1 632a94f8d801fa1178d366b8 test         <NA>                     TRUE    FALSE  
-    2 630ce53290cfd8789366fd49 {clockify}   630ce46090cfd8789366f4fb TRUE    FALSE  
-    3 630ce53cb59c366b0e27743f {emayili}    630ce46090cfd8789366f4fb TRUE    FALSE  
-    # … with abbreviated variable names ¹​billable, ²​archived
+      project_id               project_name client_id              billable archived
+      <chr>                    <chr>        <chr>                  <lgl>    <lgl>   
+    1 632a94f8d801fa1178d366b8 test         <NA>                   TRUE     FALSE   
+    2 630ce53290cfd8789366fd49 {clockify}   63a55695db26c25e9d4e2… TRUE     FALSE   
+    3 630ce53cb59c366b0e27743f {emayili}    63a55695db26c25e9d4e2… TRUE     FALSE   
 
 ## Time Entries
 
@@ -179,15 +159,13 @@ prepare_cran_entry <- time_entry_create(
 )
 ```
 
-    2022-10-19 16:44:48 — POST https://api.clockify.me/api/v1/workspaces/630c61ba9c3a3c3112812332/time-entries
-
 Check on the ID for this new time entry.
 
 ``` r
 prepare_cran_entry$time_entry_id
 ```
 
-    [1] "63501b7041407109a86a9737"
+    [1] "64f21f2ad397e5503bef3bb4"
 
 Confirm that it has been inserted.
 
@@ -196,25 +174,16 @@ time_entries(concise = FALSE) %>%
   select(time_entry_id, description, time_start, time_end)
 ```
 
-    2022-10-19 16:44:48 — GET https://api.clockify.me/api/v1/user
-    2022-10-19 16:44:48 — GET https://api.clockify.me/api/v1/workspaces/630c61ba9c3a3c3112812332/user/5f227e0cd7176a0e6e754409/time-entries
-    2022-10-19 16:44:48 — Page contains 3 results.
-    2022-10-19 16:44:48 — API returned 3 results.
-
-    # A tibble: 3 × 4
+    # A tibble: 1 × 4
       time_entry_id            description   time_start          time_end           
       <chr>                    <chr>         <dttm>              <dttm>             
-    1 63501ac741407109a86a96f6 Prepare for … 2021-08-30 08:00:00 2021-08-30 10:30:00
-    2 63501add7e299f5e61cd1a0a Prepare for … 2021-08-30 08:00:00 2021-08-30 10:30:00
-    3 63501b7041407109a86a9737 Prepare for … 2021-08-30 08:00:00 2021-08-30 10:30:00
+    1 64f21f2ad397e5503bef3bb4 Prepare for … 2021-08-30 08:00:00 2021-08-30 10:30:00
 
 ### Delete Time Entry
 
 ``` r
 time_entry_delete(prepare_cran_entry$time_entry_id)
 ```
-
-    2022-10-19 16:44:48 — DELETE https://api.clockify.me/api/v1/workspaces/630c61ba9c3a3c3112812332/time-entries/63501b7041407109a86a9737
 
     [1] TRUE
 
@@ -225,16 +194,9 @@ time_entries(concise = FALSE) %>%
   select(time_entry_id, description, time_start, time_end)
 ```
 
-    2022-10-19 16:44:48 — GET https://api.clockify.me/api/v1/user
-    2022-10-19 16:44:48 — GET https://api.clockify.me/api/v1/workspaces/630c61ba9c3a3c3112812332/user/5f227e0cd7176a0e6e754409/time-entries
-    2022-10-19 16:44:48 — Page contains 2 results.
-    2022-10-19 16:44:48 — API returned 2 results.
-
-    # A tibble: 2 × 4
-      time_entry_id            description   time_start          time_end           
-      <chr>                    <chr>         <dttm>              <dttm>             
-    1 63501ac741407109a86a96f6 Prepare for … 2021-08-30 08:00:00 2021-08-30 10:30:00
-    2 63501add7e299f5e61cd1a0a Prepare for … 2021-08-30 08:00:00 2021-08-30 10:30:00
+    # A tibble: 0 × 4
+    # ℹ 4 variables: time_entry_id <chr>, description <chr>, time_start <dttm>,
+    #   time_end <dttm>
 
 ## Endpoints
 
