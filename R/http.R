@@ -38,12 +38,14 @@ GET <- function(path, query = NULL, ...) {
   url <- api_url(path)
   log_debug("GET {url}")
 
-  response <- httr::GET(
+  response <- httr::RETRY(
+    "GET",
     url,
     query = query,
     add_headers(
       "X-Api-Key" = get_api_key()
     ),
+    quiet = TRUE,
     ...
   )
 
