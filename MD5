@@ -1,11 +1,11 @@
-e36ebbe6d572cf457cc1fe734870d72e *DESCRIPTION
+e64e8ac4cce2f71cfde1eac951f3b466 *DESCRIPTION
 6cbee822df79ca633ae99b7ce34399e5 *NAMESPACE
 52ac0459e73953c6beb7b829b98bc039 *NEWS.md
 8adfddf343f0b630e55da7cf410bbb62 *R/api-key.R
 c0238576ab4bbdae1839b974d3c54ded *R/cache.R
 cd7feab834891f8824623e732e1507f9 *R/check-arguments.R
 5452e02fc857a86aaf94123455ecb33b *R/client.R
-9f165c92a71fbf928af0951bec295641 *R/clockify.R
+ddd49f3fbaaaa4f6f9f90f8afd5dba54 *R/clockify.R
 fc53349db309f636248fe8289fb0c30b *R/custom-fields.R
 3788f6650925d326822d747996aed8b4 *R/http.R
 20b3f1b61c3bc6e7ba495e1fc3cfe080 *R/options.R
